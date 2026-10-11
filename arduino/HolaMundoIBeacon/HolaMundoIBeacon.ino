@@ -136,7 +136,8 @@ void loop () {
   // 
   // mido y publico
   // 
-  int valorCO2 = elMedidor.medirCO2();
+  //int valorCO2 = elMedidor.medirCO2();
+  int valorCO2=123;
   
   elPublicador.publicarCO2( valorCO2,
 							cont,

@@ -21,22 +21,28 @@
 #include "ServicioEnEmisora.h"
 
 // ----------------------------------------------------------
+// Clase EmisoraBLE
 // ----------------------------------------------------------
 class EmisoraBLE {
 private:
 
+  // Nombre que se anunciará por BLE
   const char * nombreEmisora;
+  // ID del fabricante
   const uint16_t fabricanteID;
+  // Potencia de transmisión
   const int8_t txPower;
 
 public:
 
   // .........................................................
+  // Tipos de callback para conexión y desconexión
   // .........................................................
   using CallbackConexionEstablecida = void ( uint16_t connHandle );
   using CallbackConexionTerminada = void ( uint16_t connHandle, uint8_t reason);
 
   // .........................................................
+  // Constructor
   // .........................................................
   EmisoraBLE( const char * nombreEmisora_, const uint16_t fabricanteID_,
 			  const int8_t txPower_ ) 
@@ -71,6 +77,7 @@ public:
   */
 	
   // .........................................................
+  // Encender la emisora BLE
   // .........................................................
   void encenderEmisora() {
 	// Serial.println ( "Bluefruit.begin() " );
@@ -81,6 +88,9 @@ public:
   } // ()
 
   // .........................................................
+  // Encender con callbacks de conexión/desconexión
+  //		encenderEmisora() 
+  //			<--
   // .........................................................
   void encenderEmisora( CallbackConexionEstablecida cbce,
 						CallbackConexionTerminada cbct ) {
@@ -93,6 +103,9 @@ public:
   } // ()
 
   // .........................................................
+  // Detener anuncio actual
+  //		detenerAnuncio()
+  //			<--
   // .........................................................
   void detenerAnuncio() {
 
@@ -111,45 +124,39 @@ public:
   } // ()
 
   // .........................................................
+  // Emitir iBeacon estándar
   // .........................................................
-  void emitirAnuncioIBeacon( uint8_t * beaconUUID, int16_t major, int16_t minor, uint8_t rssi ) {
+  void emitirAnuncioIBeacon(uint8_t *beaconUUID,
+                            int16_t major,
+                            int16_t minor,
+                            uint8_t rssi) {
+    // Limpiar cualquier anuncio anterior para evitar mezclar formatos.
+    detenerAnuncio();
+    Bluefruit.Advertising.clearData();
+    Bluefruit.ScanResponse.clearData();
 
-	//
-	//
-	//
-	(*this).detenerAnuncio();
-	
-	//
-	// creo el beacon 
-	//
-	BLEBeacon elBeacon( beaconUUID, major, minor, rssi );
-	elBeacon.setManufacturer( (*this).fabricanteID );
+    // Configurar potencia y nombre visible en la respuesta de escaneo.
+    Bluefruit.setTxPower(txPower);
+    Bluefruit.setName(nombreEmisora);
 
-	//
-	// parece que esto debe ponerse todo aquí
-	//
+    // Flags: dispositivo BLE detectable, no Bluetooth clásico.
+    Bluefruit.Advertising.addFlags(
+        BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE
+    );
 
-	Bluefruit.setTxPower( (*this).txPower );
-	Bluefruit.setName( (*this).nombreEmisora );
-	Bluefruit.ScanResponse.addName(); // para que envíe el nombre de emisora (?!)
+    // Crear el anuncio iBeacon estándar.
+    BLEBeacon beacon(beaconUUID, major, minor, (int8_t) rssi);
+    beacon.setManufacturer(fabricanteID);
+    Bluefruit.Advertising.setBeacon(beacon);
 
-	//
-	// pongo el beacon
-	//
-	Bluefruit.Advertising.setBeacon( elBeacon );
+    // El nombre va en scan response; algunas apps muestran el beacon
+    // como fabricante/datos iBeacon y no como dispositivo emparejable.
+    Bluefruit.ScanResponse.addName();
 
-	//
-	// ? qué valorers poner aquí
-	//
-	Bluefruit.Advertising.restartOnDisconnect(true); // no hace falta, pero lo pongo
-	Bluefruit.Advertising.setInterval(100, 100);    // in unit of 0.625 ms
-
-	//
-	// empieza el anuncio, 0 = tiempo indefinido (ya lo pararán)
-	//
-	Bluefruit.Advertising.start( 0 ); 
-	
-  } // ()
+    Bluefruit.Advertising.restartOnDisconnect(true);
+    Bluefruit.Advertising.setInterval(160, 160);
+    Bluefruit.Advertising.start(0); // 0 = indefinido
+  } // emitirAnuncioIBeacon
 
   // .........................................................
   //
@@ -261,6 +268,9 @@ public:
   } // ()
 
   // .........................................................
+  // Añadir servicios BLE
+  // ServicioEnEmisora: servicio --> anyadirServicio()
+  //											--> booleano
   // .........................................................
   bool anyadirServicio( ServicioEnEmisora & servicio ) {
 
@@ -280,6 +290,8 @@ public:
 
   
   // .........................................................
+  //	ServicioEnEmisora: servicio --> anyadirServicioConSusCaracteristicas() 
+  //													--> booleano
   // .........................................................
   bool anyadirServicioConSusCaracteristicas( ServicioEnEmisora & servicio ) { 
 	return (*this).anyadirServicio( servicio );
@@ -312,18 +324,23 @@ public:
   } // ()
 
   // .........................................................
+  // 	CallbackConexionEstablecida: cb --> instalarCallbackConexionEstablecida()
+  //												<--
   // .........................................................
   void instalarCallbackConexionEstablecida( CallbackConexionEstablecida cb ) {
 	Bluefruit.Periph.setConnectCallback( cb );
   } // ()
 
   // .........................................................
+  //	CallbackConexionEstablecida: cb --> instalarCallbackConexionTerminada()
+  //												<--
   // .........................................................
   void instalarCallbackConexionTerminada( CallbackConexionTerminada cb ) {
 	Bluefruit.Periph.setDisconnectCallback( cb );
   } // ()
 
   // .........................................................
+  // Obtener conexión por handle
   // .........................................................
   BLEConnection * getConexion( uint16_t connHandle ) {
 	return Bluefruit.Connection( connHandle );

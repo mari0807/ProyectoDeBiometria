@@ -23,10 +23,14 @@ public:
 
   // .........................................................
   // .........................................................
+  // Espera el Monitor Serie un máximo de ~3 s.
+  // Si no se abre, sigue igual: así el BLE no se queda sin arrancar.
   void esperarDisponible() {
+	const unsigned long timeoutMs = 3000;
+	const unsigned long t0 = millis();
 
-	while ( !Serial ) {
-	  delay(10);   
+	while ( !Serial && (millis() - t0) < timeoutMs ) {
+	  delay(10);
 	}
 
   } // ()
