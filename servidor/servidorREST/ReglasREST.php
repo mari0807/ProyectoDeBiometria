@@ -1,7 +1,7 @@
 <?php
 // ------------------------------------------------------------------
 // Fichero: ReglasREST.php
-// Plantilla profe (ReglasREST.js) adaptada a PHP + Apache
+// Autora: Mari Dapcheva
 // ------------------------------------------------------------------
 // Descripción:
 //   Reglas REST:

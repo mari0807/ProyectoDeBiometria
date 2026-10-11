@@ -1,10 +1,10 @@
-// -*- mode: c++ -*-
+﻿// -*- mode: c++ -*-
 
 #ifndef LED_H_INCLUIDO
 #define LED_H_INCLUIDO
 
 // ----------------------------------------------------------
-// Jordi Bataller i Mascarell
+// Mari Dapcheva
 // 2019-07-07
 // ----------------------------------------------------------
 

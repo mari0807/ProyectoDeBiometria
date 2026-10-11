@@ -1,13 +1,11 @@
 Servidor ProyectoBiometria
-Nombres al estilo plantilla del profe + Sprint 0 Ferran (PHP/XAMPP).
+Autora: Mari Dapcheva
 
-Estructura (como la del profe):
+Estructura:
   servidor/
     bbdd/           datosMediciones.sql
-    logica/         Logica.php, mainTest1.php   ← lógica real (no proxy)
+    logica/         Logica.php, mainTest1.php
     servidorREST/   conexion.php, ReglasREST.php
-
-web_cliente/  (vacía por ahora)
 
 Preparar:
 1. XAMPP: Apache + MySQL

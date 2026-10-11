@@ -1,6 +1,7 @@
 <?php
 // ------------------------------------------------------------------
 // Fichero: conexion.php
+// Autora: Mari Dapcheva
 // ------------------------------------------------------------------
 // Descripción:
 //   Conexión MySQL a la BBDD datosMediciones

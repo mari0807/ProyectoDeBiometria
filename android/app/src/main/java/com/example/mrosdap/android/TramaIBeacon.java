@@ -1,9 +1,9 @@
-package com.example.mrosdap.android;
+﻿package com.example.mrosdap.android;
 
 import java.util.Arrays;
 
 // -----------------------------------------------------------------------------------
-// @author: Jordi Bataller i Mascarell
+// @author: Mari Dapcheva
 // -----------------------------------------------------------------------------------
 public class TramaIBeacon {
     private byte[] prefijo = null; // 9 bytes

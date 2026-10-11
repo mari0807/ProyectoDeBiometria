@@ -1,6 +1,6 @@
 -- ------------------------------------------------------------------
 -- BBDD datosMediciones
--- Basado en el SQL de Ferran Sansaloni, adaptado a Mari
+-- Autora: Mari Dapcheva
 -- Importar en phpMyAdmin (XAMPP)
 -- ------------------------------------------------------------------
 
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS mediciones (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO usuarios (id_usuario, nombre, apellidos, correo, telefono) VALUES
-(0, 'Mari', 'Ros', 'mari@example.com', '000000000')
+(0, 'Mari', 'Dapcheva', 'mari.dapcheva@example.com', '000000000')
 ON DUPLICATE KEY UPDATE nombre=VALUES(nombre);
 
 INSERT INTO sensores (id_sensor, id_usuario, nombre_sensor, descripcion) VALUES

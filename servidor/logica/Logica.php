@@ -1,7 +1,7 @@
 <?php
 // ------------------------------------------------------------------
 // Fichero: Logica.php
-// Plantilla profe (Logica.js) + Sprint 0 Ferran Sansaloni
+// Autora: Mari Dapcheva
 // ------------------------------------------------------------------
 // Descripción:
 //   Clase de lógica de negocio (no proxy).

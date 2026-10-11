@@ -1,7 +1,7 @@
 <?php
 // ------------------------------------------------------------------
 // Fichero: mainTest1.php
-// Plantilla profe (mainTest1) + Sprint 0 Ferran Sansaloni
+// Autora: Mari Dapcheva
 // ------------------------------------------------------------------
 // Descripción:
 //   1. Inserta una medición

@@ -1,11 +1,11 @@
-package com.example.mrosdap.android;
+﻿package com.example.mrosdap.android;
 
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.UUID;
 
 // -----------------------------------------------------------------------------------
-// @author: Jordi Bataller i Mascarell
+// @author: Mari Dapcheva
 // -----------------------------------------------------------------------------------
 public class Utilidades {
 
