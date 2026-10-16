@@ -1,4 +1,10 @@
 // -*- mode: c++ -*-
+// Nombre: LED.h
+// Descripción: Control del LED de la placa y espera bloqueante.
+// Copyright: (c) 2026 Mari Rosenova Dapcheva
+// Fecha: 16/10/2026
+// Autor: Mari Rosenova Dapcheva
+// Aportación: apoyo del sketch.
 
 // tiempo: Z --> esperar()
 
@@ -7,6 +13,7 @@
 
 // --------------------
 // tiempo: Z --> esperar()
+// Espera los milisegundos indicados.
 // --------------------
 void esperar (long tiempo) {
   delay (tiempo);
@@ -41,6 +48,7 @@ public:
 
   // --------------------
   // numero: Z --> LED() -->
+  // Crea el LED en el pin indicado.
   // --------------------
   LED (int numero)
 	: numeroLED (numero), encendido(false)
@@ -51,6 +59,7 @@ public:
 
   // --------------------
   // encender() -->
+  // Enciende el LED.
   // --------------------
   void encender () {
 	digitalWrite(numeroLED, HIGH);
@@ -59,6 +68,7 @@ public:
 
   // --------------------
   // apagar() -->
+  // Apaga el LED.
   // --------------------
   void apagar () {
 	  digitalWrite(numeroLED, LOW);
@@ -67,6 +77,7 @@ public:
 
   // --------------------
   // alternar() -->
+  // Cambia el LED de encendido a apagado o al revés.
   // --------------------
   void alternar () {
 	if (encendido) {
@@ -78,6 +89,7 @@ public:
 
   // --------------------
   // tiempo: Z --> brillar() -->
+  // Enciende el LED, espera y lo apaga.
   // --------------------
   void brillar (long tiempo) {
 	encender ();

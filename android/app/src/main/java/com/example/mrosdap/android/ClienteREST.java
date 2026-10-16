@@ -1,3 +1,9 @@
+// Nombre: ClienteREST.java
+// Descripción: Envía el JSON nombre, uuid, major y minor al API REST.
+// Copyright: (c) 2026 Mari Rosenova Dapcheva
+// Fecha: 16/10/2026
+// Autor: Mari Rosenova Dapcheva
+// Aportación: cliente HTTP del móvil.
 package com.example.mrosdap.android;
 
 import android.os.Handler;
@@ -26,6 +32,7 @@ public class ClienteREST {
 
     // --------------------
     // nombre: Text, uuid: Text, major: N, minor: N --> enviarMedicion() --x
+    // Hace el POST JSON al API REST en segundo plano.
     // --------------------
     public static void enviarMedicion(
             String nombre,

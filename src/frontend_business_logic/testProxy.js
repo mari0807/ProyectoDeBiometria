@@ -1,3 +1,9 @@
+// Nombre: testProxy.js
+// Descripción: Test automático de la lógica fake. Sustituye fetch y comprueba el minor 123.
+// Copyright: (c) 2026 Mari Rosenova Dapcheva
+// Fecha: 16/10/2026
+// Autor: Mari Rosenova Dapcheva
+// Aportación: criterio de aceptación de LogicaProxy.
 var fs = require("fs");
 var path = require("path");
 var vm = require("vm");

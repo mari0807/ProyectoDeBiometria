@@ -1,4 +1,10 @@
 // -*- mode: c++ -*-
+// Nombre: Publicador.h
+// Descripción: Publica el CO2 como iBeacon usando la emisora BLE.
+// Copyright: (c) 2026 Mari Rosenova Dapcheva
+// Fecha: 16/10/2026
+// Autor: Mari Rosenova Dapcheva
+// Aportación: paso de la medida al anuncio.
 
 // MedicionesID = { CO2, TEMPERATURA, RUIDO }
 //
@@ -50,12 +56,14 @@ public:
 
   // --------------------
   // Publicador() -->
+  // Crea el publicador con su emisora.
   // --------------------
   Publicador( ) {
   }
 
   // --------------------
   // encenderEmisora() -->
+  // Pide a la emisora que se encienda.
   // --------------------
   void encenderEmisora() {
 	(*this).laEmisora.encenderEmisora();
@@ -63,6 +71,7 @@ public:
 
   // --------------------
   // valor_co2: Z, contador: N, tiempo_espera: Z --> publicarCO2() -->
+  // Emite el iBeacon con el CO2 en el minor.
   // --------------------
   void publicarCO2( int16_t valorCO2, uint8_t contador,
 					long tiempoEspera ) {

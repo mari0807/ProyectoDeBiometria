@@ -1,3 +1,9 @@
+// Nombre: MainActivity.java
+// Descripción: Escanea el beacon, parte la trama y pide a ClienteREST el POST.
+// Copyright: (c) 2026 Mari Rosenova Dapcheva
+// Fecha: 16/10/2026
+// Autor: Mari Rosenova Dapcheva
+// Aportación: actividad Android que une Bluetooth y el API REST.
 package com.example.mrosdap.android;
 
 import android.Manifest;
@@ -55,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
     // --------------------
     // resultado: ResultadoEscaneo --> mostrarInformacionDispositivoBTLE() -->
+    // Escribe en el log el dispositivo detectado.
     // --------------------
     private void mostrarInformacionDispositivoBTLE(ScanResult resultado) {
         BluetoothDevice bluetoothDevice = resultado.getDevice();
@@ -98,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
 
     // --------------------
     // texto: Text --> pintarEstado() -->
+    // Muestra un texto de estado en la pantalla del móvil.
     // --------------------
     private void pintarEstado(String texto) {
         runOnUiThread(() -> {
@@ -110,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
 
     // --------------------
     // dispositivo_buscado: Text --> buscarEsteDispositivoBTLE() -->
+    // Empieza el escaneo BLE y, si es nuestro beacon, hace el POST.
     // --------------------
     private void buscarEsteDispositivoBTLE(final String dispositivoBuscado) {
         Log.d(">>>>", " buscarEsteDispositivoBTLE(): empieza buscando " + dispositivoBuscado);
@@ -129,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
         final boolean[] enviandoAlServidor = { false };
 
         this.callbackDelEscaneo = new ScanCallback() {
+            // onScanResult(): si el anuncio es el nuestro, parte la trama y hace el POST.
             @Override
             public void onScanResult(int callbackType, ScanResult resultado) {
                 super.onScanResult(callbackType, resultado);
@@ -192,11 +202,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
+            // onBatchScanResults(): el escaneo por lotes no se usa.
             @Override
             public void onBatchScanResults(List<ScanResult> results) {
                 super.onBatchScanResults(results);
             }
 
+            // onScanFailed(): deja en el log el código de error del escaneo.
             @Override
             public void onScanFailed(int errorCode) {
                 super.onScanFailed(errorCode);
@@ -215,6 +227,7 @@ public class MainActivity extends AppCompatActivity {
 
     // --------------------
     // detenerBusquedaDispositivosBTLE() -->
+    // Para el escaneo BLE.
     // --------------------
     private void detenerBusquedaDispositivosBTLE() {
         BluetoothAdapter adaptador = BluetoothAdapter.getDefaultAdapter();
@@ -236,6 +249,7 @@ public class MainActivity extends AppCompatActivity {
 
     // --------------------
     // botonBuscarNuestroDispositivoBTLEPulsado() -->
+    // El botón de buscar arranca el escaneo de Mari-Biometria.
     // --------------------
     public void botonBuscarNuestroDispositivoBTLEPulsado(View v) {
         Log.d(">>>>", " boton nuestro dispositivo BTLE Pulsado");
@@ -244,6 +258,7 @@ public class MainActivity extends AppCompatActivity {
 
     // --------------------
     // botonDetenerBusquedaDispositivosBTLEPulsado() -->
+    // El botón de parar detiene el escaneo.
     // --------------------
     public void botonDetenerBusquedaDispositivosBTLEPulsado(View v) {
         Log.d(">>>>", " boton detener busqueda dispositivos BTLE Pulsado");
@@ -254,6 +269,7 @@ public class MainActivity extends AppCompatActivity {
 
     // --------------------
     // inicializarBlueTooth() -->
+    // Pide permisos y deja listo el Bluetooth.
     // --------------------
     private void inicializarBlueTooth() {
         BluetoothAdapter bta = BluetoothAdapter.getDefaultAdapter();
@@ -300,6 +316,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     // --------------------
     // onCreate() -->
+    // Crea la actividad y prepara el Bluetooth.
     // --------------------
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -316,6 +333,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     // --------------------
     // request_code: Z, permissions: [ Text ], grant_results: [ Z ] --> onRequestPermissionsResult() -->
+    // Recoge si el usuario ha concedido los permisos BLE.
     // --------------------
     public void onRequestPermissionsResult(int requestCode, String[] permissions,
                                            int[] grantResults) {

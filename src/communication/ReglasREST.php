@@ -1,7 +1,14 @@
 <?php
+// Nombre: ReglasREST.php
+// Descripción: API REST. El GET y el POST llaman a la lógica y no escriben SQL.
+// Copyright: (c) 2026 Mari Rosenova Dapcheva
+// Fecha: 16/10/2026
+// Autor: Mari Rosenova Dapcheva
+// Aportación: puerta HTTP entre el móvil, la web y la lógica.
 
 // --------------------
 // obtenerMedicion() --> medicion: Medicion
+// Devuelve la última medición. En la web, el resultado llega por callback.
 // --------------------
 function atenderGET($laLogica) {
     return [
@@ -12,6 +19,7 @@ function atenderGET($laLogica) {
 
 // --------------------
 // nombre: Text, uuid: Text, major: N, minor: N --> guardarMedicion() --> id: Z
+// Guarda los cuatro campos y devuelve el id de la fila.
 // --------------------
 function atenderPOST($laLogica, $input) {
     if (!is_array($input) || !isset($input['uuid']) || !isset($input['minor'])) {

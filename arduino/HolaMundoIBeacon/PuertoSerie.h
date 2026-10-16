@@ -1,4 +1,10 @@
 // -*- mode: c++ -*-
+// Nombre: PuertoSerie.h
+// Descripción: Escribe mensajes de seguimiento por el puerto serie.
+// Copyright: (c) 2026 Mari Rosenova Dapcheva
+// Fecha: 16/10/2026
+// Autor: Mari Rosenova Dapcheva
+// Aportación: traza de la emisión.
 
 // ------------------------------------------ PuertoSerie ------------------------------------------
 // |
@@ -25,6 +31,7 @@ private:
 public:
   // --------------------
   // baudios: Z --> PuertoSerie() -->
+  // Crea el puerto con esos baudios.
   // --------------------
   PuertoSerie (long baudios_) {
 	baudios = baudios_;
@@ -32,6 +39,7 @@ public:
 
   // --------------------
   // esperarDisponible() -->
+  // Abre el puerto serie.
   // --------------------
   void esperarDisponible() {
 	Serial.begin( baudios );
@@ -40,6 +48,7 @@ public:
 
   // --------------------
   // mensaje: Text --> escribir() -->
+  // Escribe un mensaje por el puerto serie.
   // --------------------
   template<typename T>
   void escribir (T mensaje) {

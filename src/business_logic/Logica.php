@@ -1,10 +1,17 @@
 <?php
+// Nombre: Logica.php
+// Descripción: Lógica de negocio. Guarda una medición y devuelve la última. Solo habla con MySQL.
+// Copyright: (c) 2026 Mari Rosenova Dapcheva
+// Fecha: 16/10/2026
+// Autor: Mari Rosenova Dapcheva
+// Aportación: clase independiente del API REST.
 class Logica {
 
     private $conn;
 
     // --------------------
     // Logica() -->
+    // Construye el objeto de lógica.
     // --------------------
     public function __construct($conn) {
         $this->conn = $conn;
@@ -12,6 +19,7 @@ class Logica {
 
     // --------------------
     // nombre: Text, uuid: Text, major: N, minor: N --> guardarMedicion() --> id: Z
+    // Guarda los cuatro campos y devuelve el id de la fila.
     // --------------------
     public function guardarMedicion($nombre, $uuid, $major, $minor) {
         $stmt = $this->conn->prepare("
@@ -29,6 +37,7 @@ class Logica {
 
     // --------------------
     // obtenerMedicion() --> medicion: Medicion
+    // Lee la última fila de la tabla mediciones.
     // --------------------
     public function obtenerMedicion() {
         $stmt = $this->conn->prepare("SELECT * FROM mediciones ORDER BY timestamp DESC, id_medicion DESC LIMIT 1");

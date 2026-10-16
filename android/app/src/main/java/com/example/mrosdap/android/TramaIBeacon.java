@@ -1,3 +1,9 @@
+// Nombre: TramaIBeacon.java
+// Descripción: Parte los bytes del anuncio en prefijo, uuid, major, minor y potencia.
+// Copyright: (c) 2026 Mari Rosenova Dapcheva
+// Fecha: 16/10/2026
+// Autor: Mari Rosenova Dapcheva
+// Aportación: lectura de la trama iBeacon.
 package com.example.mrosdap.android;
 
 import java.util.Arrays;
@@ -70,6 +76,7 @@ public class TramaIBeacon {
 
     // --------------------
     // getPrefijo() --> [ N ]_9
+    // Devuelve los 9 bytes de prefijo de la trama.
     // --------------------
     public byte[] getPrefijo() {
         return prefijo;
@@ -77,6 +84,7 @@ public class TramaIBeacon {
 
     // --------------------
     // getUUID() --> [ N ]_16
+    // Devuelve los 16 bytes del UUID.
     // --------------------
     public byte[] getUUID() {
         return uuid;
@@ -84,6 +92,7 @@ public class TramaIBeacon {
 
     // --------------------
     // getMajor() --> [ N ]_2
+    // Devuelve los 2 bytes del major.
     // --------------------
     public byte[] getMajor() {
         return major;
@@ -91,6 +100,7 @@ public class TramaIBeacon {
 
     // --------------------
     // getMinor() --> [ N ]_2
+    // Devuelve los 2 bytes del minor.
     // --------------------
     public byte[] getMinor() {
         return minor;
@@ -98,6 +108,7 @@ public class TramaIBeacon {
 
     // --------------------
     // getTxPower() --> Z
+    // Devuelve la potencia de transmisión.
     // --------------------
     public byte getTxPower() {
         return txPower;
@@ -105,6 +116,7 @@ public class TramaIBeacon {
 
     // --------------------
     // getLosBytes() --> [ N ]
+    // Devuelve los bytes completos del anuncio.
     // --------------------
     public byte[] getLosBytes() {
         return losBytes;
@@ -112,6 +124,7 @@ public class TramaIBeacon {
 
     // --------------------
     // getAdvFlags() --> [ N ]_3
+    // Devuelve los flags del anuncio.
     // --------------------
     public byte[] getAdvFlags() {
         return advFlags;
@@ -119,6 +132,7 @@ public class TramaIBeacon {
 
     // --------------------
     // getAdvHeader() --> [ N ]_2
+    // Devuelve la cabecera del anuncio.
     // --------------------
     public byte[] getAdvHeader() {
         return advHeader;
@@ -126,6 +140,7 @@ public class TramaIBeacon {
 
     // --------------------
     // getCompanyID() --> [ N ]_2
+    // Devuelve el identificador de fabricante.
     // --------------------
     public byte[] getCompanyID() {
         return companyID;
@@ -133,6 +148,7 @@ public class TramaIBeacon {
 
     // --------------------
     // getiBeaconType() --> N
+    // Devuelve el tipo iBeacon.
     // --------------------
     public byte getiBeaconType() {
         return iBeaconType;
@@ -140,6 +156,7 @@ public class TramaIBeacon {
 
     // --------------------
     // getiBeaconLength() --> N
+    // Devuelve la longitud iBeacon.
     // --------------------
     public byte getiBeaconLength() {
         return iBeaconLength;
@@ -147,6 +164,7 @@ public class TramaIBeacon {
 
     // --------------------
     // los_bytes: [ N ] --> TramaIBeacon() -->
+    // Separa el anuncio en uuid, major y minor.
     // --------------------
     public TramaIBeacon(byte[] bytes) {
         this.losBytes = bytes;

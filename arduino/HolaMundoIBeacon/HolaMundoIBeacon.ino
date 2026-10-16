@@ -1,4 +1,10 @@
 // -*-c++-*-
+// Nombre: HolaMundoIBeacon.ino
+// Descripción: Programa de la placa. Emite una vez la medida ficticia de CO2.
+// Copyright: (c) 2026 Mari Rosenova Dapcheva
+// Fecha: 16/10/2026
+// Autor: Mari Rosenova Dapcheva
+// Aportación: origen de la medición que acaba en la base de datos.
 
 // inicializarPlaquita()
 //
@@ -36,6 +42,7 @@ namespace Globales {
 
 // --------------------
 // inicializarPlaquita()
+// Prepara LED, puerto serie, emisora, publicador y medidor.
 // --------------------
 void inicializarPlaquita () {
 
@@ -43,6 +50,7 @@ void inicializarPlaquita () {
 
 // --------------------
 // setup()
+// Arranca la placa llamando a inicializarPlaquita.
 // --------------------
 void setup() {
 
@@ -62,6 +70,7 @@ void setup() {
 
 // --------------------
 // loop()
+// Publica el CO2 123 una sola vez y después solo espera.
 // --------------------
 void loop () {
 
@@ -83,7 +92,6 @@ void loop () {
   elPuerto.escribir( "\n" );
 
   elPublicador.publicarCO2( valorCO2, 1, 0 );
-
   elPuerto.escribir( "---- anuncio sigue \n" );
 
 }

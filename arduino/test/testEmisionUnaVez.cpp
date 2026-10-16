@@ -1,3 +1,9 @@
+// Nombre: testEmisionUnaVez.cpp
+// Descripción: Test automático de que el anuncio se publica una sola vez.
+// Copyright: (c) 2026 Mari Rosenova Dapcheva
+// Fecha: 16/10/2026
+// Autor: Mari Rosenova Dapcheva
+// Aportación: criterio de aceptación del loop de Arduino.
 #include <stdio.h>
 
 int main() {

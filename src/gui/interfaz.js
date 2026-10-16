@@ -1,7 +1,14 @@
+// Nombre: interfaz.js
+// Descripción: Pinta la última medición y la vuelve a pedir cada 10 segundos.
+// Copyright: (c) 2026 Mari Rosenova Dapcheva
+// Fecha: 16/10/2026
+// Autor: Mari Rosenova Dapcheva
+// Aportación: pantalla de la web. Llama solo a la lógica fake.
 document.addEventListener("DOMContentLoaded", function () {
 
     // --------------------
     // medicion: Medicion --> pintarMedicion()
+    // Rellena la tabla con una medición o con el aviso de que no hay.
     // --------------------
     function pintarMedicion(medida) {
         var tableBody = document.querySelector("#medicionesTable tbody");
@@ -28,6 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // --------------------
     // cargarMediciones()
+    // Pide la última medición a la lógica fake y actualiza la tabla.
     // --------------------
     var laLogica = new Logica();
 

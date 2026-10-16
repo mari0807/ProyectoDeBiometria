@@ -1,3 +1,9 @@
+// Nombre: EnvioBeaconTest.java
+// Descripción: Test automático de los cuatro datos que el móvil saca del beacon.
+// Copyright: (c) 2026 Mari Rosenova Dapcheva
+// Fecha: 16/10/2026
+// Autor: Mari Rosenova Dapcheva
+// Aportación: criterio de aceptación del parseo Android.
 package com.example.mrosdap.android;
 
 import org.junit.Test;
@@ -6,6 +12,7 @@ import static org.junit.Assert.assertEquals;
 
 public class EnvioBeaconTest {
 
+    // alEncontrarElBeaconEnviaNombreUuidMajorYMinor(): la trama de demo da nombre, uuid, major 2817 y minor 123.
     @Test
     public void alEncontrarElBeaconEnviaNombreUuidMajorYMinor() {
         byte[] anuncio = new byte[30];

@@ -1,3 +1,9 @@
+// Nombre: Utilidades.java
+// Descripción: Pasa bytes, textos y números entre la trama y el JSON.
+// Copyright: (c) 2026 Mari Rosenova Dapcheva
+// Fecha: 16/10/2026
+// Autor: Mari Rosenova Dapcheva
+// Aportación: conversiones que usan TramaIBeacon y MainActivity.
 package com.example.mrosdap.android;
 
 import java.math.BigInteger;
@@ -52,6 +58,7 @@ public class Utilidades {
 
     // --------------------
     // texto: Text --> stringToBytes() --x
+    // Pasa un texto a bytes.
     // [ N ] <--
     // --------------------
     public static byte[] stringToBytes(String texto) {
@@ -60,6 +67,7 @@ public class Utilidades {
 
     // --------------------
     // uuid: Text --> stringToUUID() --x
+    // Pasa el texto del uuid a UUID.
     // Text <--
     // --------------------
     public static UUID stringToUUID(String uuid) {
@@ -75,6 +83,7 @@ public class Utilidades {
 
     // --------------------
     // uuid: Text --> uuidToString() --x
+    // Pasa un UUID a texto.
     // Text <--
     // --------------------
     public static String uuidToString(UUID uuid) {
@@ -83,6 +92,7 @@ public class Utilidades {
 
     // --------------------
     // uuid: Text --> uuidToHexString() --x
+    // Pasa un UUID a hexadecimal.
     // Text <--
     // --------------------
     public static String uuidToHexString(UUID uuid) {
@@ -91,6 +101,7 @@ public class Utilidades {
 
     // --------------------
     // bytes: [ N ] --> bytesToString() --x
+    // Pasa bytes a texto. Así se lee el uuid de la trama.
     // Text <--
     // --------------------
     public static String bytesToString(byte[] bytes) {
@@ -107,6 +118,7 @@ public class Utilidades {
 
     // --------------------
     // mas_significativos: Z, menos_significativos: Z --> dosLongToBytes() --x
+    // Junta dos long en un array de bytes.
     // [ N ]_16 <--
     // --------------------
     public static byte[] dosLongToBytes(long masSignificativos, long menosSignificativos) {
@@ -118,6 +130,7 @@ public class Utilidades {
 
     // --------------------
     // bytes: [ N ] --> bytesToInt() --x
+    // Pasa los bytes de major o minor a entero.
     // Z <--
     // --------------------
     public static int bytesToInt(byte[] bytes) {
@@ -126,6 +139,7 @@ public class Utilidades {
 
     // --------------------
     // bytes: [ N ] --> bytesToLong() --x
+    // Pasa bytes a long.
     // Z <--
     // --------------------
     public static long bytesToLong(byte[] bytes) {
@@ -134,6 +148,7 @@ public class Utilidades {
 
     // --------------------
     // bytes: [ N ] --> bytesToIntOK() --x
+    // Pasa bytes a entero respetando el orden de los bytes.
     // Z <--
     // --------------------
     public static int bytesToIntOK(byte[] bytes) {
@@ -160,6 +175,7 @@ public class Utilidades {
 
     // --------------------
     // bytes: [ N ] --> bytesToHexString() --x
+    // Pasa bytes a hexadecimal para el log.
     // Text <--
     // --------------------
     public static String bytesToHexString(byte[] bytes) {

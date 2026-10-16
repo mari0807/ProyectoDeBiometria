@@ -1,4 +1,10 @@
 <?php
+// Nombre: testLogica.php
+// Descripción: Test automático de guardarMedicion y obtenerMedicion con la medida ficticia 123.
+// Copyright: (c) 2026 Mari Rosenova Dapcheva
+// Fecha: 16/10/2026
+// Autor: Mari Rosenova Dapcheva
+// Aportación: criterio de aceptación de la lógica de negocio.
 include __DIR__ . '/Logica.php';
 
 $conn = new mysqli("localhost", "root", "", "datosMediciones");

@@ -1,4 +1,10 @@
 <?php
+// Nombre: testComunicacion.php
+// Descripción: Test automático del POST, del GET y de un POST incompleto.
+// Copyright: (c) 2026 Mari Rosenova Dapcheva
+// Fecha: 16/10/2026
+// Autor: Mari Rosenova Dapcheva
+// Aportación: criterio de aceptación del API REST.
 include __DIR__ . '/../business_logic/Logica.php';
 include __DIR__ . '/ReglasREST.php';
 

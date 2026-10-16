@@ -1,3 +1,9 @@
+-- Nombre: datosMediciones.sql
+-- Descripción: Crea la base datosMediciones y la tabla mediciones.
+-- Copyright: (c) 2026 Mari Rosenova Dapcheva
+-- Fecha: 16/10/2026
+-- Autor: Mari Rosenova Dapcheva
+-- Aportación: diseño físico de la base.
 -- Medicion = ( id_medicion: Z, nombre: Text, uuid: Text, major: N, minor: N, timestamp: Text )
 
 CREATE DATABASE IF NOT EXISTS datosMediciones

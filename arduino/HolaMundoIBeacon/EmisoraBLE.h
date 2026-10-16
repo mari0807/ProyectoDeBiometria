@@ -1,4 +1,10 @@
 // -*- mode: c++ -*-
+// Nombre: EmisoraBLE.h
+// Descripción: Enciende la radio y emite el anuncio iBeacon.
+// Copyright: (c) 2026 Mari Rosenova Dapcheva
+// Fecha: 16/10/2026
+// Autor: Mari Rosenova Dapcheva
+// Aportación: emisión Bluetooth del beacon.
 
 // ---------------------------------------------- EmisoraBLE ----------------------------------------------
 // |
@@ -52,6 +58,7 @@ public:
 
   // --------------------
   // nombre_emisora: Text, fabricante_id: N, tx_power: Z --> EmisoraBLE() -->
+  // Guarda el nombre, el fabricante y la potencia.
   // --------------------
   EmisoraBLE( const char * nombreEmisora_, const uint16_t fabricanteID_,
 			  const int8_t txPower_ )
@@ -64,6 +71,7 @@ public:
 
   // --------------------
   // encenderEmisora() -->
+  // Enciende la radio BLE.
   // --------------------
   void encenderEmisora() {
 	 Bluefruit.begin();
@@ -73,6 +81,7 @@ public:
 
   // --------------------
   // encenderEmisora() -->
+  // Enciende la radio y guarda los callbacks de conexión.
   // --------------------
   void encenderEmisora( CallbackConexionEstablecida cbce,
 						CallbackConexionTerminada cbct ) {
@@ -86,6 +95,7 @@ public:
 
   // --------------------
   // detenerAnuncio() -->
+  // Deja de anunciar.
   // --------------------
   void detenerAnuncio() {
 
@@ -97,6 +107,7 @@ public:
 
   // --------------------
   // estaAnunciando() --> B
+  // Dice si el anuncio sigue activo.
   // --------------------
   bool estaAnunciando() {
 	return Bluefruit.Advertising.isRunning();
@@ -104,6 +115,7 @@ public:
 
   // --------------------
   // beacon_uuid: [ N ]_16, major: Z, minor: Z, rssi: N --> emitirAnuncioIBeacon() -->
+  // Emite el anuncio iBeacon con major y minor.
   // --------------------
   void emitirAnuncioIBeacon(uint8_t *beaconUUID,
                             int16_t major,
@@ -133,6 +145,7 @@ public:
 
   // --------------------
   // carga: Text, tamanyo_carga: N --> emitirAnuncioIBeaconLibre() -->
+  // Emite un anuncio con una carga libre.
   // --------------------
   void emitirAnuncioIBeaconLibre( const char * carga, const uint8_t tamanyoCarga ) {
 
@@ -175,6 +188,7 @@ public:
 
   // --------------------
   // instalarCallbackConexionEstablecida() -->
+  // Registra el callback de conexión.
   // --------------------
   void instalarCallbackConexionEstablecida( CallbackConexionEstablecida cb ) {
 	Bluefruit.Periph.setConnectCallback( cb );
@@ -182,6 +196,7 @@ public:
 
   // --------------------
   // instalarCallbackConexionTerminada() -->
+  // Registra el callback de desconexión.
   // --------------------
   void instalarCallbackConexionTerminada( CallbackConexionTerminada cb ) {
 	Bluefruit.Periph.setDisconnectCallback( cb );
@@ -189,6 +204,7 @@ public:
 
   // --------------------
   // conn_handle: N --> getConexion() <--
+  // Devuelve la conexión BLE de ese handle.
   // --------------------
   BLEConnection * getConexion( uint16_t connHandle ) {
 	return Bluefruit.Connection( connHandle );
