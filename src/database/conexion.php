@@ -1,12 +1,4 @@
 <?php
-// ------------------------------------------------------------------
-// Fichero: conexion.php
-// Autora: Mari Dapcheva
-// ------------------------------------------------------------------
-// Descripción:
-//   Conexión MySQL a la BBDD datosMediciones
-// ------------------------------------------------------------------
-
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 

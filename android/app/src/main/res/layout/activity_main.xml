@@ -8,13 +8,6 @@
     tools:context=".MainActivity">
 
     <Button
-        android:id="@+id/botonBuscarDispositivosBTLE"
-        android:text="Buscar dispositivos BTLE"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
-
-    <Button
         android:id="@+id/botonBuscarNuestroDispositivoBTLE"
         android:text="Buscar Mari-Biometria"
         android:layout_width="match_parent"
@@ -26,6 +19,15 @@
         android:text="Detener búsqueda"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        />
+
+    <TextView
+        android:id="@+id/textoBeacon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="Todavía no se ha encontrado el beacon"
+        android:textSize="18sp"
         />
 
 </android.widget.LinearLayout>

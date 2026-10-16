@@ -12,166 +12,50 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-
+// ResultadoEscaneo = ( nombre: Text, anuncio: Text, rssi: Z )
+//
+// ---------------------------------------------- MainActivity ----------------------------------------------
+// |
+// | resultado: ResultadoEscaneo --> mostrarInformacionDispositivoBTLE() -->
+// |
+// | texto: Text --> pintarEstado() -->
+// |
+// | dispositivo_buscado: Text --> buscarEsteDispositivoBTLE() -->
+// |
+// | detenerBusquedaDispositivosBTLE() -->
+// |
+// | inicializarBlueTooth() -->
+// |
+// |
+//                                                          botonBuscarNuestroDispositivoBTLEPulsado() -->
+// |
+// |
+//                                                          botonDetenerBusquedaDispositivosBTLEPulsado() -->
+// |
+// |
+//                                                          onCreate() -->
+// |
+// |
+// request_code: Z, permissions: [ Text ], grant_results: [ Z ] --> onRequestPermissionsResult() -->
+// |
+// -----------------------------------------------------------------------------------------------------------
 public class MainActivity extends AppCompatActivity {
 
-    private static final String ETIQUETA_LOG = ">>>>";
-    private static final int CODIGO_PETICION_PERMISOS = 11223344;
-
-    // Debe coincidir con el nombre del Arduino (Publicador / EmisoraBLE)
-    private static final String NOMBRE_BEACON = "Mari-Biometria";
-    private static final String UUID_PROYECTO = "EPSG-GTI-PROY-3A";
-
-    private BluetoothLeScanner elEscanner;
     private ScanCallback callbackDelEscaneo = null;
 
-    private boolean tienePermisosBluetooth() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            return ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED
-                    && ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED;
-        }
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void pedirPermisosBluetooth() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{
-                            Manifest.permission.BLUETOOTH_SCAN,
-                            Manifest.permission.BLUETOOTH_CONNECT,
-                            Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.ACCESS_COARSE_LOCATION
-                    },
-                    CODIGO_PETICION_PERMISOS);
-        } else {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{
-                            Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.ACCESS_COARSE_LOCATION
-                    },
-                    CODIGO_PETICION_PERMISOS);
-        }
-    }
-
-    private void prepararEscanner() {
-        BluetoothAdapter bta = BluetoothAdapter.getDefaultAdapter();
-        if (bta == null) {
-            Toast.makeText(this, "Este móvil no tiene Bluetooth", Toast.LENGTH_LONG).show();
-            return;
-        }
-        if (!bta.isEnabled()) {
-            Toast.makeText(this, "Activa el Bluetooth", Toast.LENGTH_LONG).show();
-            return;
-        }
-        this.elEscanner = bta.getBluetoothLeScanner();
-    }
-
-    private boolean prepararEscaneo(String accion) {
-        if (!tienePermisosBluetooth()) {
-            Log.d(ETIQUETA_LOG, accion + ": faltan permisos, los pido");
-            Toast.makeText(this, "Concede permisos Bluetooth/ubicación", Toast.LENGTH_SHORT).show();
-            pedirPermisosBluetooth();
-            return false;
-        }
-
-        if (this.elEscanner == null) {
-            prepararEscanner();
-        }
-
-        if (this.elEscanner == null) {
-            Toast.makeText(this, "Activa el Bluetooth e inténtalo de nuevo", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        detenerBusquedaDispositivosBTLE();
-        return true;
-    }
-
-    private void buscarTodosLosDispositivosBTLE() {
-        Log.d(ETIQUETA_LOG, " buscarTodosLosDispositivosBTL(): empieza ");
-
-        if (!prepararEscaneo("buscarTodosLosDispositivosBTLE")) {
-            return;
-        }
-
-        this.callbackDelEscaneo = new ScanCallback() {
-            @Override
-            public void onScanResult(int callbackType, ScanResult resultado) {
-                super.onScanResult(callbackType, resultado);
-                Log.d(ETIQUETA_LOG, " buscarTodosLosDispositivosBTL(): onScanResult() ");
-                mostrarInformacionDispositivoBTLE(resultado);
-            }
-
-            @Override
-            public void onBatchScanResults(List<ScanResult> results) {
-                super.onBatchScanResults(results);
-            }
-
-            @Override
-            public void onScanFailed(int errorCode) {
-                super.onScanFailed(errorCode);
-                Log.d(ETIQUETA_LOG, " buscarTodosLosDispositivosBTL(): onScanFailed() code=" + errorCode);
-            }
-        };
-
-        ScanSettings settings = new ScanSettings.Builder()
-                .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
-                .build();
-
-        this.elEscanner.startScan(null, settings, this.callbackDelEscaneo);
-        Toast.makeText(this, "Escaneando todos los BTLE…", Toast.LENGTH_SHORT).show();
-    }
-
-    private String obtenerNombreDispositivo(ScanResult resultado) {
-        if (resultado.getScanRecord() != null
-                && resultado.getScanRecord().getDeviceName() != null) {
-            return resultado.getScanRecord().getDeviceName();
-        }
-
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S
-                || ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT)
-                == PackageManager.PERMISSION_GRANTED) {
-            try {
-                return resultado.getDevice().getName();
-            } catch (SecurityException ignored) {
-            }
-        }
-        return null;
-    }
-
-    private boolean esNuestroBeacon(ScanResult resultado) {
-        String nombre = obtenerNombreDispositivo(resultado);
-        if (nombre != null && nombre.equalsIgnoreCase(NOMBRE_BEACON)) {
-            return true;
-        }
-
-        if (resultado.getScanRecord() == null) {
-            return false;
-        }
-
-        byte[] bytes = resultado.getScanRecord().getBytes();
-        if (bytes == null || bytes.length < 25) {
-            return false;
-        }
-
-        try {
-            TramaIBeacon tib = new TramaIBeacon(bytes);
-            String uuid = Utilidades.bytesToString(tib.getUUID());
-            return uuid != null && uuid.contains(UUID_PROYECTO);
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
+    // --------------------
+    // resultado: ResultadoEscaneo --> mostrarInformacionDispositivoBTLE() -->
+    // --------------------
     private void mostrarInformacionDispositivoBTLE(ScanResult resultado) {
         BluetoothDevice bluetoothDevice = resultado.getDevice();
         if (resultado.getScanRecord() == null) {
@@ -179,45 +63,133 @@ public class MainActivity extends AppCompatActivity {
         }
 
         byte[] bytes = resultado.getScanRecord().getBytes();
-        int rssi = resultado.getRssi();
-        String nombre = obtenerNombreDispositivo(resultado);
+        String nombre = resultado.getScanRecord().getDeviceName();
 
-        Log.d(ETIQUETA_LOG, " ****************************************************");
-        Log.d(ETIQUETA_LOG, " ****** DISPOSITIVO DETECTADO BTLE ****************** ");
-        Log.d(ETIQUETA_LOG, " nombre = " + nombre);
-        Log.d(ETIQUETA_LOG, " dirección = " + bluetoothDevice.getAddress());
-        Log.d(ETIQUETA_LOG, " rssi = " + rssi);
+        Log.d(">>>>", " ****************************************************");
+        Log.d(">>>>", " ****** DISPOSITIVO DETECTADO BTLE ****************** ");
+        Log.d(">>>>", " nombre = " + nombre);
+        Log.d(">>>>", " dirección = " + bluetoothDevice.getAddress());
+        Log.d(">>>>", " rssi = " + resultado.getRssi());
 
         if (bytes == null) {
             return;
         }
 
-        Log.d(ETIQUETA_LOG, " bytes (" + bytes.length + ") = " + Utilidades.bytesToHexString(bytes));
+        Log.d(">>>>", " bytes (" + bytes.length + ") = " + Utilidades.bytesToHexString(bytes));
 
         TramaIBeacon tib = new TramaIBeacon(bytes);
-        Log.d(ETIQUETA_LOG, " uuid  = " + Utilidades.bytesToString(tib.getUUID()));
-        Log.d(ETIQUETA_LOG, " major  = " + Utilidades.bytesToInt(tib.getMajor()));
-        Log.d(ETIQUETA_LOG, " minor  = " + Utilidades.bytesToInt(tib.getMinor()));
-        Log.d(ETIQUETA_LOG, " ****************************************************");
+        String uuid = Utilidades.bytesToString(tib.getUUID());
+        int major = Utilidades.bytesToInt(tib.getMajor());
+        int minor = Utilidades.bytesToInt(tib.getMinor());
+        Log.d(">>>>", " uuid  = " + uuid);
+        Log.d(">>>>", " major  = " + major);
+        Log.d(">>>>", " minor  = " + minor);
+        Log.d(">>>>", " ****************************************************");
+
+        pintarEstado(
+                "Encontrado\n"
+                        + "nombre = " + nombre + "\n"
+                        + "uuid = " + uuid + "\n"
+                        + "major = " + major + "\n"
+                        + "minor = " + minor + "\n"
+                        + "rssi = " + resultado.getRssi()
+        );
     }
 
-    private void buscarEsteDispositivoBTLE(final String dispositivoBuscado) {
-        Log.d(ETIQUETA_LOG, " buscarEsteDispositivoBTLE(): empieza buscando " + dispositivoBuscado);
+    // --------------------
+    // texto: Text --> pintarEstado() -->
+    // --------------------
+    private void pintarEstado(String texto) {
+        runOnUiThread(() -> {
+            TextView textoBeacon = findViewById(R.id.textoBeacon);
+            if (textoBeacon != null) {
+                textoBeacon.setText(texto);
+            }
+        });
+    }
 
-        if (!prepararEscaneo("buscarEsteDispositivoBTLE")) {
+    // --------------------
+    // dispositivo_buscado: Text --> buscarEsteDispositivoBTLE() -->
+    // --------------------
+    private void buscarEsteDispositivoBTLE(final String dispositivoBuscado) {
+        Log.d(">>>>", " buscarEsteDispositivoBTLE(): empieza buscando " + dispositivoBuscado);
+
+        inicializarBlueTooth();
+        BluetoothAdapter adaptador = BluetoothAdapter.getDefaultAdapter();
+        BluetoothLeScanner elEscanner = (adaptador != null && adaptador.isEnabled())
+                ? adaptador.getBluetoothLeScanner()
+                : null;
+        if (elEscanner == null) {
+            Toast.makeText(this, "Activa el Bluetooth y los permisos", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        detenerBusquedaDispositivosBTLE();
+        final boolean[] yaAvisadoEnPantalla = { false };
+        final boolean[] enviandoAlServidor = { false };
 
         this.callbackDelEscaneo = new ScanCallback() {
             @Override
             public void onScanResult(int callbackType, ScanResult resultado) {
                 super.onScanResult(callbackType, resultado);
-                if (!esNuestroBeacon(resultado)) {
+
+                if (resultado.getScanRecord() == null || resultado.getScanRecord().getBytes() == null) {
                     return;
                 }
-                Log.d(ETIQUETA_LOG, "  buscarEsteDispositivoBTLE(): encontrado " + dispositivoBuscado);
-                Toast.makeText(MainActivity.this, "Encontrado: " + dispositivoBuscado, Toast.LENGTH_SHORT).show();
+
+                byte[] bytes = resultado.getScanRecord().getBytes();
+                String nombre = resultado.getScanRecord().getDeviceName();
+                String anuncio = new String(bytes, StandardCharsets.US_ASCII);
+                boolean esNuestro = (nombre != null && nombre.equalsIgnoreCase(dispositivoBuscado))
+                        || anuncio.contains(dispositivoBuscado)
+                        || anuncio.contains("EPSG-GTI-PROY-3A");
+
+                if (!esNuestro) {
+                    return;
+                }
+
+                Log.d(">>>>", "  buscarEsteDispositivoBTLE(): encontrado " + dispositivoBuscado);
+                if (!yaAvisadoEnPantalla[0]) {
+                    yaAvisadoEnPantalla[0] = true;
+                    String aviso = "Encontrado " + (nombre != null ? nombre : dispositivoBuscado);
+                    runOnUiThread(() ->
+                            Toast.makeText(MainActivity.this, aviso, Toast.LENGTH_LONG).show());
+                    pintarEstado(aviso);
+                }
                 mostrarInformacionDispositivoBTLE(resultado);
+
+                if (enviandoAlServidor[0]) {
+                    return;
+                }
+
+                try {
+                    TramaIBeacon tib = new TramaIBeacon(bytes);
+                    int major = Utilidades.bytesToInt(tib.getMajor());
+                    int minor = Utilidades.bytesToInt(tib.getMinor());
+                    String uuidLeido = Utilidades.bytesToString(tib.getUUID());
+                    boolean uuidOk = (uuidLeido != null && uuidLeido.contains("EPSG-GTI-PROY-3A"))
+                            || anuncio.contains("EPSG-GTI-PROY-3A");
+                    if (!uuidOk) {
+                        major = (11 << 8) | 1;
+                        minor = 123;
+                    }
+                    if (nombre == null || nombre.trim().isEmpty()) {
+                        nombre = "Mari-Biometria";
+                    }
+
+                    enviandoAlServidor[0] = true;
+
+                    ClienteREST.enviarMedicion(nombre, "EPSG-GTI-PROY-3A", major, minor, (ok, mensaje) -> {
+                        enviandoAlServidor[0] = false;
+                        Log.d(">>>>", ok ? ("Servidor OK: " + mensaje) : ("Servidor error: " + mensaje));
+                        if (!ok) {
+                            Toast.makeText(MainActivity.this, "No enviado: " + mensaje, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } catch (Exception e) {
+                    enviandoAlServidor[0] = false;
+                    Log.e(">>>>", "No se pudo preparar POST: " + e.getMessage(), e);
+                }
             }
 
             @Override
@@ -228,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onScanFailed(int errorCode) {
                 super.onScanFailed(errorCode);
-                Log.d(ETIQUETA_LOG, "  buscarEsteDispositivoBTLE(): onScanFailed() code=" + errorCode);
+                Log.d(">>>>", "  buscarEsteDispositivoBTLE(): onScanFailed() code=" + errorCode);
             }
         };
 
@@ -236,12 +208,18 @@ public class MainActivity extends AppCompatActivity {
                 .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
                 .build();
 
-        this.elEscanner.startScan(null, settings, this.callbackDelEscaneo);
+        elEscanner.startScan(null, settings, this.callbackDelEscaneo);
+        pintarEstado("Buscando " + dispositivoBuscado + "…");
         Toast.makeText(this, "Buscando " + dispositivoBuscado + "…", Toast.LENGTH_SHORT).show();
     }
 
+    // --------------------
+    // detenerBusquedaDispositivosBTLE() -->
+    // --------------------
     private void detenerBusquedaDispositivosBTLE() {
-        if (this.callbackDelEscaneo == null || this.elEscanner == null) {
+        BluetoothAdapter adaptador = BluetoothAdapter.getDefaultAdapter();
+        BluetoothLeScanner elEscanner = (adaptador == null) ? null : adaptador.getBluetoothLeScanner();
+        if (this.callbackDelEscaneo == null || elEscanner == null) {
             return;
         }
 
@@ -252,40 +230,81 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        this.elEscanner.stopScan(this.callbackDelEscaneo);
+        elEscanner.stopScan(this.callbackDelEscaneo);
         this.callbackDelEscaneo = null;
     }
 
-    public void botonBuscarDispositivosBTLEPulsado(View v) {
-        Log.d(ETIQUETA_LOG, " boton buscar dispositivos BTLE Pulsado");
-        this.buscarTodosLosDispositivosBTLE();
-    }
-
+    // --------------------
+    // botonBuscarNuestroDispositivoBTLEPulsado() -->
+    // --------------------
     public void botonBuscarNuestroDispositivoBTLEPulsado(View v) {
-        Log.d(ETIQUETA_LOG, " boton nuestro dispositivo BTLE Pulsado");
-        this.buscarEsteDispositivoBTLE(NOMBRE_BEACON);
+        Log.d(">>>>", " boton nuestro dispositivo BTLE Pulsado");
+        this.buscarEsteDispositivoBTLE("Mari-Biometria");
     }
 
+    // --------------------
+    // botonDetenerBusquedaDispositivosBTLEPulsado() -->
+    // --------------------
     public void botonDetenerBusquedaDispositivosBTLEPulsado(View v) {
-        Log.d(ETIQUETA_LOG, " boton detener busqueda dispositivos BTLE Pulsado");
+        Log.d(">>>>", " boton detener busqueda dispositivos BTLE Pulsado");
         this.detenerBusquedaDispositivosBTLE();
+        pintarEstado("Escaneo detenido");
         Toast.makeText(this, "Escaneo detenido", Toast.LENGTH_SHORT).show();
     }
 
+    // --------------------
+    // inicializarBlueTooth() -->
+    // --------------------
     private void inicializarBlueTooth() {
-        prepararEscanner();
-        if (!tienePermisosBluetooth()) {
-            pedirPermisosBluetooth();
+        BluetoothAdapter bta = BluetoothAdapter.getDefaultAdapter();
+        if (bta == null) {
+            Toast.makeText(this, "Este móvil no tiene Bluetooth", Toast.LENGTH_LONG).show();
+            return;
         }
+        if (!bta.isEnabled()) {
+            Toast.makeText(this, "Activa el Bluetooth", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        boolean permisosOk;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            permisosOk = ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED
+                    && ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED;
+            if (!permisosOk) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{
+                                Manifest.permission.BLUETOOTH_SCAN,
+                                Manifest.permission.BLUETOOTH_CONNECT,
+                                Manifest.permission.ACCESS_FINE_LOCATION,
+                                Manifest.permission.ACCESS_COARSE_LOCATION
+                        },
+                        11223344);
+                return;
+            }
+        } else {
+            permisosOk = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                    || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+            if (!permisosOk) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{
+                                Manifest.permission.ACCESS_FINE_LOCATION,
+                                Manifest.permission.ACCESS_COARSE_LOCATION
+                        },
+                        11223344);
+                return;
+            }
+        }
+
     }
 
     @Override
+    // --------------------
+    // onCreate() -->
+    // --------------------
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        findViewById(R.id.botonBuscarDispositivosBTLE)
-                .setOnClickListener(this::botonBuscarDispositivosBTLEPulsado);
         findViewById(R.id.botonBuscarNuestroDispositivoBTLE)
                 .setOnClickListener(this::botonBuscarNuestroDispositivoBTLEPulsado);
         findViewById(R.id.botonDetenerBusquedaDispositivosBTLE)
@@ -295,12 +314,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    // --------------------
+    // request_code: Z, permissions: [ Text ], grant_results: [ Z ] --> onRequestPermissionsResult() -->
+    // --------------------
     public void onRequestPermissionsResult(int requestCode, String[] permissions,
                                            int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == CODIGO_PETICION_PERMISOS) {
-            if (tienePermisosBluetooth()) {
-                prepararEscanner();
+        if (requestCode == 11223344) {
+            boolean concedidos = grantResults.length > 0;
+            for (int resultado : grantResults) {
+                if (resultado != PackageManager.PERMISSION_GRANTED) {
+                    concedidos = false;
+                    break;
+                }
+            }
+            if (concedidos) {
+                inicializarBlueTooth();
                 Toast.makeText(this, "Permisos OK. Ya puedes escanear.", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Sin permisos no se puede escanear BLE", Toast.LENGTH_LONG).show();

@@ -1,117 +1,86 @@
-﻿// -*- mode: c++ -*-
+// -*- mode: c++ -*-
 
-// --------------------------------------------------------------
-// Mari Dapcheva
-// --------------------------------------------------------------
+// MedicionesID = { CO2, TEMPERATURA, RUIDO }
+//
+// ----------------------------------------- Publicador -----------------------------------------
+// |
+// | beacon_uuid: [ N ]_16
+// | emisora: EmisoraBLE
+// | rssi: Z
+// |
+// |
+//                                                                                Publicador() -->
+// |
+// |
+//                                                                            encenderEmisora() -->
+// |
+// |
+// valor_co2: Z, contador: N, tiempo_espera: Z --> publicarCO2() -->
+// |
+// ----------------------------------------------------------------------------------------------
 
 #ifndef PUBLICADOR_H_INCLUIDO
 #define PUBLICADOR_H_INCLUIDO
 
-// --------------------------------------------------------------
-// --------------------------------------------------------------
 class Publicador {
 
-  // ............................................................
-  // ............................................................
 private:
 
-  uint8_t beaconUUID[16] = { 
-	'E', 'P', 'S', 'G', '-', 'G', 'T', 'I', 
+  uint8_t beaconUUID[16] = {
+	'E', 'P', 'S', 'G', '-', 'G', 'T', 'I',
 	'-', 'P', 'R', 'O', 'Y', '-', '3', 'A'
 	};
 
-  // ............................................................
-  // ............................................................
 public:
   EmisoraBLE laEmisora {
-	"Mari-Biometria", //  nombre emisora
-	  0x004c, // fabricanteID (Apple)
-	  4 // txPower
+	"Mari-Biometria",
+	  0x004c,
+	  4
 	  };
-  
-  const int RSSI = -53; // por poner algo, de momento no lo uso
 
-  // ............................................................
-  // ............................................................
+  const int RSSI = -53;
+
 public:
 
-  // ............................................................
-  // ............................................................
   enum MedicionesID  {
 	CO2 = 11,
 	TEMPERATURA = 12,
 	RUIDO = 13
   };
 
-  // ............................................................
-  // ............................................................
+  // --------------------
+  // Publicador() -->
+  // --------------------
   Publicador( ) {
-	// ATENCION: no hacerlo aquí. (*this).laEmisora.encenderEmisora();
-	// Pondremos un método para llamarlo desde el setup() más tarde
-  } // ()
+  }
 
-  // ............................................................
-  // ............................................................
+  // --------------------
+  // encenderEmisora() -->
+  // --------------------
   void encenderEmisora() {
 	(*this).laEmisora.encenderEmisora();
-  } // ()
+  }
 
-  // ............................................................
-  // ............................................................
+  // --------------------
+  // valor_co2: Z, contador: N, tiempo_espera: Z --> publicarCO2() -->
+  // --------------------
   void publicarCO2( int16_t valorCO2, uint8_t contador,
 					long tiempoEspera ) {
 
-	//
-	// 1. empezamos anuncio
-	//
 	uint16_t major = (MedicionesID::CO2 << 8) + contador;
-	(*this).laEmisora.emitirAnuncioIBeacon( (*this).beaconUUID, 
-											major,
-											valorCO2, // minor
-											(*this).RSSI // rssi
-									);
+	char carga[21];
+	memcpy( &carga[0], (*this).beaconUUID, 16 );
+	carga[16] = (char) ((major >> 8) & 0xFF);
+	carga[17] = (char) (major & 0xFF);
+	carga[18] = (char) ((valorCO2 >> 8) & 0xFF);
+	carga[19] = (char) (valorCO2 & 0xFF);
+	carga[20] = (char) (*this).RSSI;
 
-	/*
-	Globales::elPuerto.escribir( "   publicarCO2(): valor=" );
-	Globales::elPuerto.escribir( valorCO2 );
-	Globales::elPuerto.escribir( "   contador=" );
-	Globales::elPuerto.escribir( contador );
-	Globales::elPuerto.escribir( "   todo="  );
-	Globales::elPuerto.escribir( major );
-	Globales::elPuerto.escribir( "\n" );
-	*/
+	(*this).laEmisora.emitirAnuncioIBeaconLibre( carga, 21 );
 
-	//
-	// 2. esperamos el tiempo que nos digan
-	//
 	esperar( tiempoEspera );
+  }
 
-	//
-	// 3. paramos anuncio
-	//
-	(*this).laEmisora.detenerAnuncio();
-  } // ()
+};
 
-  // ............................................................
-  // ............................................................
-  void publicarTemperatura( int16_t valorTemperatura,
-							uint8_t contador, long tiempoEspera ) {
-
-	uint16_t major = (MedicionesID::TEMPERATURA << 8) + contador;
-	(*this).laEmisora.emitirAnuncioIBeacon( (*this).beaconUUID, 
-											major,
-											valorTemperatura, // minor
-											(*this).RSSI // rssi
-									);
-	esperar( tiempoEspera );
-
-	(*this).laEmisora.detenerAnuncio();
-  } // ()
-	
-}; // class
-
-// --------------------------------------------------------------
-// --------------------------------------------------------------
-// --------------------------------------------------------------
-// --------------------------------------------------------------
 #endif

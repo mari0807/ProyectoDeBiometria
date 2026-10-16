@@ -3,24 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mediciones | Mari Dapcheva</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <script src="js/obtenerMediciones.js" defer></script>
+    <title>Última medición | Mari Dapcheva</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="../frontend_business_logic/LogicaProxy.js?v=4" defer></script>
+    <script src="interfaz.js?v=5" defer></script>
 </head>
 <body>
 <div class="container">
-    <h1>Mediciones de Beacons</h1>
+    <h1>Última medición</h1>
     <p class="subtitulo">Mari Dapcheva — ProyectoBiometria</p>
+    <p id="estadoActualizacion" class="subtitulo">Cargando…</p>
     <table id="medicionesTable">
         <thead>
         <tr>
-            <th>ID_medicion</th>
-            <th>ID_sensor</th>
+            <th>ID</th>
             <th>Nombre</th>
             <th>UUID</th>
-            <th>RSSI</th>
-            <th>CO2</th>
-            <th>Fecha</th>
+            <th>Major</th>
+            <th>Minor</th>
+            <th>Hora</th>
         </tr>
         </thead>
         <tbody>
