@@ -9,7 +9,7 @@ nombre: Text, uuid: Text, major: N, minor: N --> POST --> guardarMedicion() --> 
 # Design Clarifications
 
 - GET pide la última medición a la lógica.
-- POST guarda nombre, uuid, major y minor, y devuelve el id.
+- El POST llega en un solo JSON: {"nombre","uuid","major","minor"}. Dentro van esos cuatro campos. Devuelve el id.
 - Si falta el nombre, se usa Mari-Biometria. Si falta el major, se usa 0.
 - uuid y minor tienen que venir en el POST.
 

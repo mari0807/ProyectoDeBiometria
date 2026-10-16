@@ -52,23 +52,23 @@ $laLogica = new Logica($conn);
 try {
 
     if ($metodo === 'GET') {
-        echo json_encode(atenderGET($laLogica));
+        echo json_encode(atenderGET($laLogica), JSON_UNESCAPED_UNICODE);
     }
 
     else if ($metodo === 'POST') {
         $input = json_decode(file_get_contents("php://input"), true);
-        echo json_encode(atenderPOST($laLogica, $input));
+        echo json_encode(atenderPOST($laLogica, $input), JSON_UNESCAPED_UNICODE);
     }
 
     else {
-        echo json_encode(["success" => false, "mensaje" => "Método no permitido"]);
+        echo json_encode(["success" => false, "mensaje" => "Método no permitido"], JSON_UNESCAPED_UNICODE);
     }
 
 } catch (Exception $e) {
     echo json_encode([
         "success" => false,
         "mensaje" => $e->getMessage()
-    ]);
+    ], JSON_UNESCAPED_UNICODE);
 }
 
 $conn->close();

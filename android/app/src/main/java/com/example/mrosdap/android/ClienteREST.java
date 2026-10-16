@@ -45,7 +45,7 @@ public class ClienteREST {
 
                 byte[] body = json.toString().getBytes(StandardCharsets.UTF_8);
 
-                URL url = new URL("http://192.168.1.3/biometria/src/communication/ReglasREST.php");
+                URL url = new URL("http://172.20.10.4/biometria/src/communication/ReglasREST.php");
                 conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
                 conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");

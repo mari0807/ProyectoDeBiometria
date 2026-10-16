@@ -13,7 +13,13 @@ global.fetch = function (url, options) {
         json: function () {
             return Promise.resolve({
                 success: true,
-                medicion: { id_medicion: 7, minor: 123 }
+                medicion: {
+                    id_medicion: 7,
+                    nombre: "Mari-Biometria",
+                    uuid: "EPSG-GTI-PROY-3A",
+                    major: 2817,
+                    minor: 123
+                }
             });
         }
     });
